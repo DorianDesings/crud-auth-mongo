@@ -6,28 +6,22 @@ import { verifyTokenRequest } from '../utils/api/auth.api';
 
 export const AuthProvider = ({ children }) => {
 	const [userData, setUserData] = useState(null);
-	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [loading, setLoading] = useState(true);
 
-	console.log('USER DATA', userData);
-
 	useEffect(() => {
-		checkLogin(setUserData, setIsAuthenticated, setLoading);
+		checkLogin(setUserData, setLoading);
 	}, []);
 
 	return (
-		<AuthContext.Provider
-			value={{ userData, setUserData, isAuthenticated, loading }}
-		>
+		<AuthContext.Provider value={{ userData, setUserData, loading }}>
 			{children}
 		</AuthContext.Provider>
 	);
 };
 
-const checkLogin = async (setUserData, setIsAuthenticated, setLoading) => {
+const checkLogin = async (setUserData, setLoading) => {
 	const cookies = Cookies.get();
 	if (!cookies.token) {
-		setIsAuthenticated(false);
 		setLoading(false);
 		return;
 	}
@@ -36,16 +30,13 @@ const checkLogin = async (setUserData, setIsAuthenticated, setLoading) => {
 		const response = await verifyTokenRequest(cookies.token);
 
 		if (!response) {
-			setIsAuthenticated(false);
 			setLoading(false);
 			return;
 		}
 
-		setIsAuthenticated(true);
 		setUserData(response);
 		setLoading(false);
 	} catch (error) {
-		setIsAuthenticated(false);
 		setLoading(false);
 	}
 };

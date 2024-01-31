@@ -5,7 +5,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { loginRequest } from '../utils/api/auth.api';
 
 const Login = () => {
-	const { isAuthenticated, loading, setUserData } = useContext(AuthContext);
+	const { userData, setUserData, loading } = useContext(AuthContext);
 	const navigate = useNavigate();
 	const [loginData, setLoginData] = useState({
 		email: '',
@@ -13,12 +13,12 @@ const Login = () => {
 	});
 
 	useEffect(() => {
-		if (isAuthenticated) {
+		if (userData) {
 			navigate('/');
 		}
-	}, [isAuthenticated]);
+	}, [userData]);
 
-	if (loading) return <h1>Checking User...</h1>;
+	if (loading) return;
 
 	return (
 		<>

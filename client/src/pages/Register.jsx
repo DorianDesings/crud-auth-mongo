@@ -5,7 +5,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { registerRequest } from '../utils/api/auth.api';
 
 const Register = () => {
-	const { isAuthenticated, loading } = useContext(AuthContext);
+	const { userData, loading } = useContext(AuthContext);
 	const navigate = useNavigate();
 	const [registerData, setRegiterData] = useState({
 		email: '',
@@ -13,12 +13,12 @@ const Register = () => {
 	});
 
 	useEffect(() => {
-		if (isAuthenticated) {
+		if (userData) {
 			navigate('/');
 		}
-	}, [isAuthenticated]);
+	}, [userData]);
 
-	if (isAuthenticated) {
+	if (userData) {
 		// Si ya está autenticado, no renderiza nada y redirige al inicio
 		return null;
 	}
