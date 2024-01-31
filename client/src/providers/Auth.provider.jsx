@@ -9,12 +9,16 @@ export const AuthProvider = ({ children }) => {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [loading, setLoading] = useState(true);
 
+	console.log('USER DATA', userData);
+
 	useEffect(() => {
 		checkLogin(setUserData, setIsAuthenticated, setLoading);
 	}, []);
 
 	return (
-		<AuthContext.Provider value={{ userData, isAuthenticated, loading }}>
+		<AuthContext.Provider
+			value={{ userData, setUserData, isAuthenticated, loading }}
+		>
 			{children}
 		</AuthContext.Provider>
 	);
@@ -31,7 +35,12 @@ const checkLogin = async (setUserData, setIsAuthenticated, setLoading) => {
 	try {
 		const response = await verifyTokenRequest(cookies.token);
 
-		if (!response) return setIsAuthenticated(false);
+		if (!response) {
+			setIsAuthenticated(false);
+			setLoading(false);
+			return;
+		}
+
 		setIsAuthenticated(true);
 		setUserData(response);
 		setLoading(false);

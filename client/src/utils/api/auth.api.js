@@ -22,7 +22,7 @@ export const registerRequest = async user => {
 	}
 };
 
-export const loginRequest = async user => {
+export const loginRequest = async (user, setUserData) => {
 	try {
 		const response = await fetch(URLS.AUTH_LOGIN, {
 			method: 'POST',
@@ -36,7 +36,7 @@ export const loginRequest = async user => {
 		}
 
 		const data = await response.json();
-		return data;
+		setUserData(data);
 	} catch (error) {
 		console.error('Error en la solicitud de inicio de sesión:', error);
 		throw error;

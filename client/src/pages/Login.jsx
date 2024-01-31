@@ -5,7 +5,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { loginRequest } from '../utils/api/auth.api';
 
 const Login = () => {
-	const { isAuthenticated, loading } = useContext(AuthContext);
+	const { isAuthenticated, loading, setUserData } = useContext(AuthContext);
 	const navigate = useNavigate();
 	const [loginData, setLoginData] = useState({
 		email: '',
@@ -18,17 +18,16 @@ const Login = () => {
 		}
 	}, [isAuthenticated]);
 
-	if (isAuthenticated) {
-		// Si ya está autenticado, no renderiza nada y redirige al inicio
-		return null;
-	}
-
 	if (loading) return <h1>Checking User...</h1>;
 
 	return (
 		<>
 			<h1>Login Page</h1>
-			<form onSubmit={event => handleSubmit(event, loginData, navigate)}>
+			<form
+				onSubmit={event =>
+					handleSubmit(event, loginData, navigate, setUserData)
+				}
+			>
 				<div>
 					<label htmlFor='email'>Email</label>
 					<input
@@ -56,11 +55,10 @@ const Login = () => {
 	);
 };
 
-const handleSubmit = async (event, loginData, navigate) => {
+const handleSubmit = async (event, loginData, navigate, setUserData) => {
 	event.preventDefault();
 	try {
-		await loginRequest(loginData);
-		// Después de un inicio de sesión exitoso, redirige al inicio
+		await loginRequest(loginData, setUserData);
 		navigate('/');
 	} catch (error) {
 		console.error('Error de inicio de sesión:', error);
